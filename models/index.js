@@ -26,6 +26,10 @@ db.Notice = require("./notice")(sequelize, Sequelize);
 db.Category = require("./category")(sequelize, Sequelize);
 db.Admin = require("./admin")(sequelize, Sequelize);
 db.Review = require("./review")(sequelize, Sequelize);
+db.User = require("./user")(sequelize, Sequelize);
+
+db.User.hasMany(db.Review, { onDelete: "SET NULL" });
+db.Review.belongsTo(db.User, { onDelete: "SET NULL" });
 
 db.Admin.hasMany(db.Notice, { onDelete: "SET NULL" });
 db.Notice.belongsTo(db.Admin, { onDelete: "SET NULL" });
