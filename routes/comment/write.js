@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     content: joi.string().required(),
   });
   const result = schema.validate({
-    reviewId: req.body.id,
+    reviewId: req.body.reviewId,
     content: req.body.content,
   });
   if (result.error) {
@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
   try {
     const comment = await Comment.create({
       content,
-      userId: req.user.id,
+      adminId: req.user.id,
       reviewId,
     });
 
