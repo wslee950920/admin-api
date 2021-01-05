@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) =>
         allowNull: false,
         unique: true,
       },
+      prior: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       timestamps: false,
