@@ -1,4 +1,19 @@
 const joi = require("joi");
+const aws = require("aws-sdk");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+
+aws.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: "ap-northeast-2",
+});
+
+const transporter = nodemailer.createTransport({
+  SES: new aws.SES({
+    apiVersion: "2010-12-01",
+  }),
+});
 
 const { Admin } = require("../../models");
 
@@ -21,14 +36,44 @@ const Register = async (req, res, next) => {
       return res.status(409).end();
     }
 
-    const admin = Admin.build({
+    const newAdmin = Admin.build({
       email,
       nick,
     });
-    await admin.setPassword(password);
-    await admin.save();
+    await newAdmin.setPassword(password);
+    await newAdmin.save();
 
-    return res.json(admin.serialize());
+    const token = jwt.sign(
+      {
+        id: newAdmin.id,
+        email: newAdmin.email,
+      },
+      process.env.AUTH_SECRET,
+      {
+        expiresIn: "3d",
+      }
+    );
+    // send some mail
+    transporter.sendMail(
+      {
+        from: "gatmauel9300@gmail.com",
+        to: "gatmauel9300@gmail.com",
+        subject: "갯마을 관리자 이메일 인증",
+        html: `<p>갯마을 관리자 이메일(${newAdmin.email})을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
+              <a href="http://localhost:9091/api/auth/callback?token=${token}" target="_blank">http://localhost:9091/api/auth/callback?token=${token}</a>
+              <p>위 링크는 3일간 유효합니다.</p>`,
+      },
+      (err, info) => {
+        if (err) {
+          console.error(err);
+        }
+        if (info) {
+          console.log(info);
+        }
+      }
+    );
+
+    return res.json(newAdmin.serialize());
   } catch (error) {
     console.error(error);
 
