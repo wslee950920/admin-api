@@ -3,12 +3,14 @@ const { Food, Category } = require("../../models");
 module.exports = async (req, res, next) => {
   try {
     const categories = await Category.findAll({
-      order: [["prior", "ASC"]],
+      order: [
+        ["prior", "ASC"],
+        [Food, "prior", "ASC"],
+      ],
       attributes: ["id", "category"],
       include: {
         model: Food,
         attributes: ["id", "name", "img", "price", "compo", "deli"],
-        order: ["prior", "asc"],
       },
     });
 
