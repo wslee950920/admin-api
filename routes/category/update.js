@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
   try {
     await Category.update(req.body, { where: { id } });
 
-    res.json({ updated: id, category, prior });
+    res.json({ updated: id, ...req.body });
   } catch (e) {
     next(e);
   }
