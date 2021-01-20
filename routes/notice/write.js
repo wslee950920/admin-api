@@ -23,7 +23,6 @@ module.exports = async (req, res, next) => {
 
     res.json(notice);
   } catch (error) {
-    console.error(error);
     next(error);
   }
 };

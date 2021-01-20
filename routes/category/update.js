@@ -18,8 +18,6 @@ module.exports = async (req, res, next) => {
 
     res.json({ updated: id, category, prior });
   } catch (e) {
-    console.error(e);
-
     next(e);
   }
 };

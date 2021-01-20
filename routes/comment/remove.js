@@ -8,8 +8,6 @@ module.exports = async (req, res, next) => {
 
     res.status(204).end();
   } catch (e) {
-    console.error(e);
-
     next(e);
   }
 };

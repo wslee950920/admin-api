@@ -65,7 +65,7 @@ const Register = async (req, res, next) => {
       },
       (err, info) => {
         if (err) {
-          console.error(err);
+          next(err);
         }
         if (info) {
           console.log(info);
@@ -75,8 +75,6 @@ const Register = async (req, res, next) => {
 
     return res.json(newAdmin.serialize());
   } catch (error) {
-    console.error(error);
-
     return next(error);
   }
 };

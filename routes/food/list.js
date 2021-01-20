@@ -9,8 +9,6 @@ module.exports = async (req, res, next) => {
 
     res.json(food);
   } catch (error) {
-    console.error(error);
-
     next(error);
   }
 };

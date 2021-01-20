@@ -4,7 +4,7 @@ const { Admin } = require("../../models");
 
 const AuthCallback = (req, res, next) => {
   const { token } = req.query;
-  jwt.verify(token, process.env.AUTH_SECRET, async (decoded, error) => {
+  jwt.verify(token, process.env.AUTH_SECRET, async (error, decoded) => {
     if (error) {
       if (error.name === "TokenExpiredError") {
         return res.send(`
@@ -35,8 +35,6 @@ const AuthCallback = (req, res, next) => {
                 </div>
             `);
     } catch (e) {
-      console.error(e);
-
       next(e);
     }
   });

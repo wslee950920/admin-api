@@ -3,8 +3,6 @@ const passport = require("passport");
 const Login = (req, res, next) => {
   passport.authenticate("local", (authError, result) => {
     if (authError) {
-      console.error(authError);
-
       return next(authError);
     }
     if (!result) {
@@ -13,8 +11,6 @@ const Login = (req, res, next) => {
 
     return req.login(result, (loginError) => {
       if (loginError) {
-        console.error(loginError);
-
         return next(loginError);
       }
 

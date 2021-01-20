@@ -27,8 +27,6 @@ const Register = async (req, res, next) => {
 
     return res.json(newCategory);
   } catch (error) {
-    console.error(error);
-
     return next(error);
   }
 };

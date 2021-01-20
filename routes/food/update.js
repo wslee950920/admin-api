@@ -24,8 +24,6 @@ module.exports = async (req, res, next) => {
 
     res.json({ updated: id, ...req.body });
   } catch (e) {
-    console.error(e);
-
     next(e);
   }
 };

@@ -37,8 +37,6 @@ const Register = async (req, res, next) => {
 
     return res.json(newFood);
   } catch (error) {
-    console.error(error);
-
     return next(error);
   }
 };

@@ -13,6 +13,12 @@ module.exports = (passport) => {
         try {
           const exAdmin = await Admin.findByEmail(email);
           if (exAdmin) {
+            if (!exAdmin.eVerified) {
+              const err = new Error();
+              err.status = 403;
+
+              return done(err);
+            }
             const result = await exAdmin.checkPassword(password);
             if (result) {
               const data = exAdmin.serialize();
@@ -24,7 +30,6 @@ module.exports = (passport) => {
             done(null, false);
           }
         } catch (error) {
-          console.error(error);
           done(error);
         }
       }
