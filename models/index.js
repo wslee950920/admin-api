@@ -60,15 +60,10 @@ db.Comment.belongsTo(db.Admin, { onDelete: "SET NULL" });
 db.Category.hasMany(db.Food, { foreignKey: { allowNull: false } });
 db.Food.belongsTo(db.Category, { foreignKey: { allowNull: false } });
 
-const OrderDetail = sequelize.define(
-  "OrderDetail",
-  {},
-  { timestamps: true, paranoid: true }
-);
-db.Food.belongsToMany(db.Detail, { through: OrderDetail });
-db.Detail.belongsToMany(db.Food, { through: OrderDetail });
+db.Food.hasMany(db.Detail, { foreignKey: { allowNull: false } });
+db.Detail.belongsTo(db.Food, { foreignKey: { allowNull: false } });
 
-db.Order.hasMany(OrderDetail, { foreignKey: { allowNull: false } });
-OrderDetail.belongsTo(db.Order, { foreignKey: { allowNull: false } });
+db.Order.hasMany(db.Detail, { foreignKey: { allowNull: false } });
+db.Detail.belongsTo(db.Order, { foreignKey: { allowNull: false } });
 
 module.exports = db;

@@ -11,10 +11,10 @@ const { sequelize } = require("./models");
 const passportConfig = require("./passport");
 
 const app = express();
+app.set("port", process.env.PORT || 9091);
+
 sequelize.sync();
 passportConfig(passport);
-
-app.set("port", process.env.PORT || 9091);
 
 const authRouter = require("./routes/auth");
 const commentRouter = require("./routes/comment");
@@ -24,7 +24,7 @@ const categoryRouter = require("./routes/category");
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5000"],
+    origin: true,
     credentials: true,
     exposedHeaders: ["Last-Page"],
   })
