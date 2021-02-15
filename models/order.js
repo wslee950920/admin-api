@@ -2,6 +2,10 @@ module.exports = (sequelize, DataTypes) =>
   sequelize.define(
     "order",
     {
+      orderId:{
+        type:DataTypes.STRING(10),
+        allowNull:false
+      },
       customer: {
         type: DataTypes.STRING(20),
         allowNull: false,
@@ -26,6 +30,16 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      address: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue:''
+      },
+      detail: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue:''
       },
     },
     {
