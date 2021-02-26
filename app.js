@@ -54,21 +54,42 @@ const sessionOption = {
   },
 };
 if (process.env.NODE_ENV === "production") {
+  const redis = require("redis");
+  const RedisStore = require("connect-redis")(session);
+
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
+
+  const redisClient = redis.createClient({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    logErrors: true,
+  });
+  sessionOption.store = new RedisStore({ client: redisClient });
 }
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/auth", authRouter);
-app.use("/api/comment", commentRouter);
-app.use("/api/notice", noticeRouter);
-app.use("/api/food", foodRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api", (req, res, next) => {
-  res.send("api root directory");
-});
+if (process.env.NODE_ENV === "production") {
+  app.use("/api/@admin/auth", authRouter);
+  app.use("/api/@admin/comment", commentRouter);
+  app.use("/api/@admin/notice", noticeRouter);
+  app.use("/api/@admin/food", foodRouter);
+  app.use("/api/@admin/category", categoryRouter);
+  app.use("/api/@admin", (req, res, next) => {
+    res.send("api root directory");
+  });
+} else {
+  app.use("/api/auth", authRouter);
+  app.use("/api/comment", commentRouter);
+  app.use("/api/notice", noticeRouter);
+  app.use("/api/food", foodRouter);
+  app.use("/api/category", categoryRouter);
+  app.use("/api", (req, res, next) => {
+    res.send("api root directory");
+  });
+}
 
 app.use((req, res, next) => {
   const err = new Error("Not Found");

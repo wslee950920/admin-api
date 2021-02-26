@@ -1,6 +1,6 @@
 FROM node:14-alpine
 
-WORKDIR /gatmauel/user-api
+WORKDIR /gatmauel/admin-api
 
 COPY . .
 

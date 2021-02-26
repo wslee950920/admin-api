@@ -1,9 +1,10 @@
 FROM node:14-alpine
 
-WORKDIR /gatmauel/user-api
+WORKDIR /gatmauel/admin-api
 
 COPY . .
 
+ENV NODE_ENV production
 RUN npm install
 
 RUN apk add --no-cache tzdata 
