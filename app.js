@@ -72,12 +72,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === "production") {
-  app.use("/api/@admin/auth", authRouter);
-  app.use("/api/@admin/comment", commentRouter);
-  app.use("/api/@admin/notice", noticeRouter);
-  app.use("/api/@admin/food", foodRouter);
-  app.use("/api/@admin/category", categoryRouter);
-  app.use("/api/@admin", (req, res, next) => {
+  app.use("/@admin/auth", authRouter);
+  app.use("/@admin/comment", commentRouter);
+  app.use("/@admin/notice", noticeRouter);
+  app.use("/@admin/food", foodRouter);
+  app.use("/@admin/category", categoryRouter);
+  app.use("/@admin", (req, res, next) => {
     res.send("api root directory");
   });
 } else {
