@@ -2,9 +2,18 @@ module.exports = (sequelize, DataTypes) =>
   sequelize.define(
     "order",
     {
-      orderId:{
-        type:DataTypes.STRING(10),
-        allowNull:false
+      orderId: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        unique: true,
+      },
+      tId: {
+        type: DataTypes.STRING(20),
+        unique: true,
+      },
+      aId: {
+        type: DataTypes.STRING(20),
+        unique: true,
       },
       customer: {
         type: DataTypes.STRING(20),
@@ -34,16 +43,22 @@ module.exports = (sequelize, DataTypes) =>
       address: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        defaultValue:''
+        defaultValue: "",
       },
       detail: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        defaultValue:''
+        defaultValue: "",
+      },
+      measure: {
+        type: DataTypes.STRING(5),
+        allowNull: false,
       },
     },
     {
       timestamps: true,
       paranoid: true,
+      chartset: "utf8mb4", // mb4 => 이모티콘 허용하기 위해
+      collate: "utf8mb4_general_ci",
     }
   );
