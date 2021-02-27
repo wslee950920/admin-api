@@ -71,25 +71,14 @@ app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
-if (process.env.NODE_ENV === "production") {
-  app.use("/@admin/auth", authRouter);
-  app.use("/@admin/comment", commentRouter);
-  app.use("/@admin/notice", noticeRouter);
-  app.use("/@admin/food", foodRouter);
-  app.use("/@admin/category", categoryRouter);
-  app.use("/@admin", (req, res, next) => {
-    res.send("api root directory");
-  });
-} else {
-  app.use("/api/auth", authRouter);
-  app.use("/api/comment", commentRouter);
-  app.use("/api/notice", noticeRouter);
-  app.use("/api/food", foodRouter);
-  app.use("/api/category", categoryRouter);
-  app.use("/api", (req, res, next) => {
-    res.send("api root directory");
-  });
-}
+app.use("/@admin/auth", authRouter);
+app.use("/@admin/comment", commentRouter);
+app.use("/@admin/notice", noticeRouter);
+app.use("/@admin/food", foodRouter);
+app.use("/@admin/category", categoryRouter);
+app.use("/@admin", (req, res, next) => {
+  res.send("api root directory");
+});
 
 app.use((req, res, next) => {
   const err = new Error("Not Found");
