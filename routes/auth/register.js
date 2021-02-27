@@ -59,8 +59,18 @@ const Register = async (req, res, next) => {
         from: "no-reply@gatmauel.com",
         to: "gatmauel9300@gmail.com",
         subject: "갯마을 관리자 이메일 인증",
-        html: `<p>갯마을 관리자 이메일(${newAdmin.email})을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
-              <a href="http://localhost:9091/api/auth/callback?token=${token}" target="_blank">http://localhost:9091/api/auth/callback?token=${token}</a>
+        html: `<p>갯마을 관리자 이메일(${
+          newAdmin.email
+        })을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
+              <a href="https://${
+                process.env.NODE_ENV === "production"
+                  ? "www.gatmauel.com"
+                  : "localhost"
+              }/@admin/auth/callback?token=${token}" target="_blank">https://${
+          process.env.NODE_ENV === "production"
+            ? "www.gatmauel.com"
+            : "localhost"
+        }/@admin/auth/callback?token=${token}</a>
               <p>위 링크는 3일간 유효합니다.</p>`,
       },
       (err, info) => {
