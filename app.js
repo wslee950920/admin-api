@@ -54,18 +54,27 @@ const sessionOption = {
   },
 };
 if (process.env.NODE_ENV === "production") {
-  const redis = require("redis");
+  const Redis = require("ioredis");
   const RedisStore = require("connect-redis")(session);
 
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 
-  const redisClient = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    logErrors: true,
-  });
-  sessionOption.store = new RedisStore({ client: redisClient });
+  const cluster = new Redis.Cluster([
+    {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST_1,
+    },
+    {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST_2,
+    },
+    {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST_3,
+    },
+  ]);
+  sessionOption.store = new RedisStore({ client: cluster });
 }
 app.use(session(sessionOption));
 app.use(passport.initialize());

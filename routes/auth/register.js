@@ -64,11 +64,11 @@ const Register = async (req, res, next) => {
         })을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
               <a href="https://${
                 process.env.NODE_ENV === "production"
-                  ? "www.gatmauel.com"
+                  ? "admin.gatmauel.com"
                   : "localhost"
               }/@admin/auth/callback?token=${token}" target="_blank">https://${
           process.env.NODE_ENV === "production"
-            ? "www.gatmauel.com"
+            ? "admin.gatmauel.com"
             : "localhost"
         }/@admin/auth/callback?token=${token}</a>
               <p>위 링크는 3일간 유효합니다.</p>`,
@@ -76,9 +76,6 @@ const Register = async (req, res, next) => {
       (err, info) => {
         if (err) {
           next(err);
-        }
-        if (info) {
-          console.log(info);
         }
       }
     );
