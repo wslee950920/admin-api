@@ -14,8 +14,8 @@ module.exports = async (req, res, next) => {
       },
     });
 
-    res.json(categories);
+    return res.json(categories);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

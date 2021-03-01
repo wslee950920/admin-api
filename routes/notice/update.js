@@ -12,8 +12,8 @@ module.exports = async (req, res, next) => {
       { where: { id } }
     );
 
-    res.end();
-  } catch (e) {
-    next(e);
+    return res.end();
+  } catch (error) {
+    return next(error);
   }
 };

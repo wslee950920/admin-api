@@ -7,8 +7,8 @@ module.exports = async (req, res, next) => {
       attributes: ["id", "name", "img", "price", "compo", "deli"],
     });
 
-    res.json(food);
+    return res.json(food);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

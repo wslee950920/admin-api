@@ -21,8 +21,8 @@ module.exports = async (req, res, next) => {
       title,
     });
 
-    res.json(notice);
+    return res.json(notice);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

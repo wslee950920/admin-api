@@ -1,4 +1,5 @@
 const joi = require("joi");
+
 const { Comment } = require("../../../models");
 
 module.exports = async (req, res, next) => {
@@ -21,7 +22,7 @@ module.exports = async (req, res, next) => {
     }
 
     return next();
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    return next(error);
   }
 };

@@ -6,8 +6,8 @@ module.exports = async (req, res, next) => {
   try {
     await Food.destroy({ where: { id } });
 
-    res.json({ deleted: id });
-  } catch (e) {
-    next(e);
+    return res.json({ deleted: id });
+  } catch (error) {
+    return next(error);
   }
 };

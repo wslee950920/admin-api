@@ -22,8 +22,8 @@ module.exports = async (req, res, next) => {
   try {
     await Food.update(req.body, { where: { id } });
 
-    res.json({ updated: id, ...req.body });
-  } catch (e) {
-    next(e);
+    return res.json({ updated: id, ...req.body });
+  } catch (error) {
+    return next(error);
   }
 };

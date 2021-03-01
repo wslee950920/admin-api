@@ -6,8 +6,8 @@ module.exports = async (req, res, next) => {
   try {
     await Comment.destroy({ where: { id } });
 
-    res.status(204).end();
-  } catch (e) {
-    next(e);
+    return res.status(204).end();
+  } catch (error) {
+    return next(error);
   }
 };

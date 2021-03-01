@@ -23,8 +23,8 @@ module.exports = async (req, res, next) => {
       reviewId,
     });
 
-    res.json(comment);
+    return res.json(comment);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

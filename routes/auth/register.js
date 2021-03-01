@@ -75,7 +75,7 @@ const Register = async (req, res, next) => {
       },
       (err, info) => {
         if (err) {
-          next(err);
+          return next(err);
         }
       }
     );

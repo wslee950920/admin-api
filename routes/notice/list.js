@@ -13,8 +13,10 @@ module.exports = async (req, res, next) => {
       offset: (page - 1) * 10,
     });
 
-    res.set("Last-Page", Math.ceil(notices.count / 10)).json(notices.rows);
+    return res
+      .set("Last-Page", Math.ceil(notices.count / 10))
+      .json(notices.rows);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
