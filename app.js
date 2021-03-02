@@ -98,7 +98,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res) => {
   if (process.env.NODE_ENV === "production") {
-    logger.error(err.message);
+    logger.error(err);
   }
 
   const error = req.app.get("env") === "development" ? err : {};
