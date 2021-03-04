@@ -1,8 +1,13 @@
+const joi = require("joi");
+
 const { Notice } = require("../../models");
 
 module.exports = async (req, res, next) => {
-  const page = parseInt(req.query.page || "1", 10);
-  if (page < 1) {
+  const schema = joi.object().keys({
+    page: joi.number().integer().min(1).required(),
+  });
+  const result = schema.validate(req.query);
+  if (result.error) {
     return res.status(400).end();
   }
 
@@ -10,7 +15,7 @@ module.exports = async (req, res, next) => {
     const notices = await Notice.findAndCountAll({
       order: [["createdAt", "DESC"]],
       limit: 10,
-      offset: (page - 1) * 10,
+      offset: (req.query.page - 1) * 10,
     });
 
     return res
