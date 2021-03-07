@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
   try {
     await Comment.update({ content: req.body.content }, { where: { id } });
 
-    res.end();
+    return res.end();
   } catch (error) {
     return next(error);
   }

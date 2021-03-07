@@ -1,6 +1,35 @@
 const joi = require("joi");
+const aws = require("aws-sdk");
 
-const { Notice } = require("../../models");
+aws.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: "ap-northeast-2",
+});
+const csd = new aws.CloudSearchDomain({
+  endpoint: process.env.AWS_CSD_DOC,
+  apiVersion: "2013-01-01",
+});
+const params = (id, content, title, nick, createdAt, updatedAt) => {
+  return {
+    contentType: "application/json",
+    documents: JSON.stringify([
+      {
+        type: "add",
+        id,
+        fields: {
+          content,
+          title,
+          nick,
+          created_at: createdAt,
+          updated_at: updatedAt,
+        },
+      },
+    ]),
+  };
+};
+
+const { Notice, sequelize } = require("../../models");
 
 module.exports = async (req, res, next) => {
   const schema = joi.object().keys({
@@ -14,15 +43,43 @@ module.exports = async (req, res, next) => {
   }
 
   const { content, title } = req.body;
+  const t = await sequelize.transaction();
   try {
-    const notice = await Notice.create({
-      adminId: req.user.id,
-      content,
-      title,
-    });
+    const notice = await Notice.create(
+      {
+        adminId: req.user.id,
+        content,
+        title,
+      },
+      {
+        transaction: t,
+      }
+    );
 
-    return res.json(notice);
+    csd.uploadDocuments(
+      params(
+        notice.id,
+        notice.content,
+        notice.title,
+        notice.nick,
+        notice.createdAt,
+        notice.updatedAt
+      ),
+      async (err, data) => {
+        if (err) {
+          await t.rollback();
+
+          return next(err);
+        } else {
+          await t.commit();
+
+          return res.json(notice);
+        }
+      }
+    );
   } catch (error) {
+    await t.rollback();
+
     return next(error);
   }
 };

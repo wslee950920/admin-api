@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   }),
 });
 
-const { Admin } = require("../../models");
+const { Admin, sequelize } = require("../../models");
 
 const Register = async (req, res, next) => {
   const schema = joi.object().keys({
@@ -30,6 +30,7 @@ const Register = async (req, res, next) => {
   }
 
   const { email, nick, password } = req.body;
+  const t = await sequelize.transaction();
   try {
     const exAdmin = await Admin.findByEmail(email);
     if (exAdmin) {
@@ -41,7 +42,7 @@ const Register = async (req, res, next) => {
       nick,
     });
     await newAdmin.setPassword(password);
-    await newAdmin.save();
+    await newAdmin.save({ transaction: t });
 
     const token = jwt.sign(
       {
@@ -73,15 +74,21 @@ const Register = async (req, res, next) => {
         }/@admin/auth/callback?token=${token}</a>
               <p>위 링크는 3일간 유효합니다.</p>`,
       },
-      (err, info) => {
+      async (err, info) => {
         if (err) {
+          await t.rollback();
+
           return next(err);
+        } else {
+          await t.commit();
+
+          return res.json(newAdmin.serialize());
         }
       }
     );
-
-    return res.json(newAdmin.serialize());
   } catch (error) {
+    await t.rollback();
+
     return next(error);
   }
 };
