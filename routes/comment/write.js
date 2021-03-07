@@ -7,12 +7,9 @@ module.exports = async (req, res, next) => {
     reviewId: joi.number().required(),
     content: joi.string().required(),
   });
-  const result = schema.validate({
-    reviewId: req.body.reviewId,
-    content: req.body.content,
-  });
+  const result = schema.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).end();
   }
 
   const { content, reviewId } = req.body;

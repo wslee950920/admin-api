@@ -34,6 +34,8 @@ const Register = async (req, res, next) => {
   try {
     const exAdmin = await Admin.findByEmail(email);
     if (exAdmin) {
+      await t.rollback();
+
       return res.status(409).end();
     }
 
@@ -55,37 +57,28 @@ const Register = async (req, res, next) => {
       }
     );
     // send some mail
-    transporter.sendMail(
-      {
-        from: "no-reply@gatmauel.com",
-        to: "gatmauel9300@gmail.com",
-        subject: "갯마을 관리자 이메일 인증",
-        html: `<p>갯마을 관리자 이메일(${
-          newAdmin.email
-        })을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
+    await transporter.sendMail({
+      from: "no-reply@gatmauel.com",
+      to: "gatmauel9300@gmail.com",
+      subject: "갯마을 관리자 이메일 인증",
+      html: `<p>갯마을 관리자 이메일(${
+        newAdmin.email
+      })을 인증하시겠습니까? 아래 링크를 클릭해주세요.</p>
               <a href="https://${
                 process.env.NODE_ENV === "production"
                   ? "admin.gatmauel.com"
                   : "localhost"
               }/@admin/auth/callback?token=${token}" target="_blank">https://${
-          process.env.NODE_ENV === "production"
-            ? "admin.gatmauel.com"
-            : "localhost"
-        }/@admin/auth/callback?token=${token}</a>
+        process.env.NODE_ENV === "production"
+          ? "admin.gatmauel.com"
+          : "localhost"
+      }/@admin/auth/callback?token=${token}</a>
               <p>위 링크는 3일간 유효합니다.</p>`,
-      },
-      async (err, info) => {
-        if (err) {
-          await t.rollback();
+    });
 
-          return next(err);
-        } else {
-          await t.commit();
+    await t.commit();
 
-          return res.json(newAdmin.serialize());
-        }
-      }
-    );
+    return res.json(newAdmin.serialize());
   } catch (error) {
     await t.rollback();
 

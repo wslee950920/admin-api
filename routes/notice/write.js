@@ -10,7 +10,7 @@ const csd = new aws.CloudSearchDomain({
   endpoint: process.env.AWS_CSD_DOC,
   apiVersion: "2013-01-01",
 });
-const params = (id, content, title, nick, createdAt, updatedAt) => {
+const params = (id, content, title, nick, createdAt) => {
   return {
     contentType: "application/json",
     documents: JSON.stringify([
@@ -22,7 +22,6 @@ const params = (id, content, title, nick, createdAt, updatedAt) => {
           title,
           nick,
           created_at: createdAt,
-          updated_at: updatedAt,
         },
       },
     ]),
@@ -36,7 +35,6 @@ module.exports = async (req, res, next) => {
     content: joi.string().required(),
     title: joi.string().max(100).required(),
   });
-
   const result = schema.validate(req.body);
   if (result.error) {
     return res.status(400).end();
@@ -62,8 +60,7 @@ module.exports = async (req, res, next) => {
         notice.content,
         notice.title,
         notice.nick,
-        notice.createdAt,
-        notice.updatedAt
+        notice.createdAt
       ),
       async (err, data) => {
         if (err) {
