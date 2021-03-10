@@ -26,7 +26,7 @@ module.exports = (req, res, next) => {
   admin
     .database()
     .ref("subscription")
-    .set(req.body)
+    .push(req.body)
     .then(() => {
       return res.end();
     })
