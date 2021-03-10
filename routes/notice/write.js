@@ -1,5 +1,8 @@
 const joi = require("joi");
 const aws = require("aws-sdk");
+const axios = require("axios");
+
+const logger = require("../../logger");
 
 aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -68,9 +71,32 @@ module.exports = async (req, res, next) => {
 
           return next(err);
         } else {
-          await t.commit();
+          axios
+            .post(
+              "https://us-central1-gatmauel-2a4f5.cloudfunctions.net/sendPushData",
+              {
+                body: notice.title,
+              },
+              {
+                headers: {
+                  "Content-type": "application/json",
+                },
+              }
+            )
+            .then(async () => {
+              await t.commit();
 
-          return res.json(notice);
+              return res.json(notice);
+            })
+            .catch(async (err) => {
+              if (process.env.NODE_ENV === "production") {
+                logger.error(err);
+              }
+
+              await t.commit();
+
+              return res.status(202).json(notice);
+            });
         }
       }
     );
