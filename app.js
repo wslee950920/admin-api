@@ -24,6 +24,7 @@ const commentRouter = require("./routes/comment");
 const noticeRouter = require("./routes/notice");
 const foodRouter = require("./routes/food");
 const categoryRouter = require("./routes/category");
+const counter = require("./routes/couter");
 
 app.use(
   cors({
@@ -74,6 +75,9 @@ app.use("/@admin/comment", commentRouter);
 app.use("/@admin/notice", noticeRouter);
 app.use("/@admin/food", foodRouter);
 app.use("/@admin/category", categoryRouter);
+
+app.get("/@admin/counter", counter);
+
 app.use("/@admin", (req, res, next) => {
   res.send("api root directory");
 });
