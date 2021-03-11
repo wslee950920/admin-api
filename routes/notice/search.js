@@ -44,7 +44,7 @@ module.exports = async (req, res, next) => {
         return res.json({
           is_end: isEnd(data, parseInt(req.query.page)),
           docs: data.hits.hit.map((value) => ({
-            id: value.id,
+            id: parseInt(value.id),
             title: value.fields.title[0],
             content: value.fields.content[0],
             nick: value.fields.nick[0],
