@@ -75,7 +75,8 @@ module.exports = async (req, res, next) => {
             .post(
               "https://us-central1-gatmauel-2a4f5.cloudfunctions.net/sendPushData",
               {
-                body: notice.title,
+                title: notice.title,
+                content: notice.content,
               },
               {
                 headers: {
